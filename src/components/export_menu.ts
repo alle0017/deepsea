@@ -60,5 +60,6 @@ export function ExportMenu({ onSelect }: Args) {
             menu.remove();
       }
 
+      close();
       return { open, close, toggle, destroy };
 }

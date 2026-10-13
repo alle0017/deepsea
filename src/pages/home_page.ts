@@ -14,6 +14,7 @@ async function select() {
             Provider.of(Router).goto('/editor', file);
       } catch (e) {
             ErrorToast('failed to open the file');
+            console.error(e)
       }
 }
 async function open(text: string) {
@@ -22,6 +23,7 @@ async function open(text: string) {
             Provider.of(Router).goto('/editor', file);
       } catch (e) {
             ErrorToast('failed to open the file');
+            console.error(e)
       }
 }
 async function create() {
@@ -30,6 +32,7 @@ async function create() {
             Provider.of(Router).goto('/editor', file);
       } catch (e) {
             ErrorToast('failed to create the file');
+            console.error(e)
       }
 }
 

@@ -20,5 +20,5 @@ export function EditorPage(file: File) {
                   return true;
             })
       }
-      return Editor({ value: file.text, save, leave })
+      return Editor({ value: file.text, save, leave, exportAs: console.log })
 }

@@ -1,10 +1,6 @@
 export class Theme {
-      primary = '#333';
-      secondary = '#111';
-      accentPrimary = '#3e5869';
-      accentSecondary = '#517084'
       text = '#cecece'
-      background = '#444'
+      background = '#1b1c1d'
 }
 
 export const row = (gap = '10px') => `display: flex; flex-direction: row; gap: ${gap};`

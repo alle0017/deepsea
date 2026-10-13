@@ -1,5 +1,6 @@
 import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import * as dialog from "@tauri-apps/plugin-dialog";
+import { history } from "./history";
 
 export class File {
       public static asName(path: string) {
@@ -18,6 +19,7 @@ export class File {
       public readonly name: string;
 
       constructor(public readonly path: string, public text: string) {
+            history.add(path);
             this.name = File.asName(path);
       }
 

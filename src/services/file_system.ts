@@ -22,7 +22,12 @@ export class File {
             history.add(path);
             this.name = File.asName(path);
       }
-
+      public copy(path: string) {
+            return new File(path, this.text);
+      }
+      public export(ext: string) {
+            return this.copy(this.path.slice(0, this.path.lastIndexOf('.')) + ext)
+      }
       public async save(text: string = this.text) {
             this.text = text;
             await writeTextFile(this.path, this.text);

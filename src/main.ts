@@ -6,7 +6,6 @@ import { File } from "./services/file_system";
 import { Shortcuts } from "./services/shortcut";
 import { Theme } from "./theme";
 import { ErrorToast } from "./components/error_toast";
-
 export function App() {
       Provider.set(Router, new Router({
             '/': HomePage,

@@ -17,7 +17,13 @@ type Args = {
       onSelect?: (format: ExportFormat) => void;
 };
 
-export function ExportMenu({ onSelect }: Args) {
+export interface ExportMenuElement  {
+    open: () => void;
+    close: () => void;
+    toggle: () => void;
+    destroy: () => void;
+}
+export function ExportMenu({ onSelect }: Args): ExportMenuElement {
       function click(id: ExportFormat) {
             close();
             onSelect?.(id);

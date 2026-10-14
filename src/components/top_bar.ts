@@ -10,7 +10,7 @@ type TopBarArgs = {
 interface ItemBuilder {
       addItem(key: string, item: { icon: string, active: () => boolean, onRun: () => void }): ItemBuilder
 }
-interface GroupBuilder {
+export interface GroupBuilder {
       addGroup(key: string, value: string): ItemBuilder
 }
 export function TopBar({ save, exportMenu }: TopBarArgs) {

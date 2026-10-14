@@ -22,7 +22,15 @@ export interface FindBarOptions {
       getView: () => EditorView;
 }
 
-export function FindBar({ getView }: FindBarOptions) {
+
+export interface FindBarElement {
+    el: HTMLElement;
+    open(): void;
+    close(): void;
+    isOpen: () => boolean;
+}
+
+export function FindBar({ getView }: FindBarOptions): FindBarElement {
       const opts = { caseSensitive: false, wholeWord: false, regexp: false };
 
       const buildQuery = () =>

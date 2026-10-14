@@ -9,14 +9,20 @@ type Args = {
       open?: (path: string) => void
 }
 export function History({ open }: Args) {
+      const latest = history.get();
       return div({ style: `width: 300px; ${column()}` },
             b({}, 'Recent'),
             hr({ style: 'width: 100%' }),
-            ...history.get().map(path => 
-                  div({ style: column(), title: `open ${path}`, click: () => open?.(path) },
-                        File.asName(path),
-                        div({ style: 'font-size: 9px;' },
-                              path
+            
+            ...(latest.length <= 0 ?
+                  ['No recent files found...']:
+            
+                  latest.map(path => 
+                        div({ style: column(), title: `open ${path}`, click: () => open?.(path) },
+                              File.asName(path),
+                              div({ style: 'font-size: 9px;' },
+                                    path
+                              )
                         )
                   )
             )

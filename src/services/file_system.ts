@@ -19,7 +19,9 @@ export class File {
       public readonly name: string;
 
       constructor(public readonly path: string, public text: string) {
-            history.add(path);
+            if (path.includes('.md')) {
+                  history.add(path);
+            }
             this.name = File.asName(path);
       }
       public copy(path: string) {

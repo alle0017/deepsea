@@ -7,21 +7,21 @@ import { EXPORT_FORMATS } from "../components/export_menu";
 
 export function EditorPage(file: File) {
       async function exportAs(format: string, value: string) {
-            const promise = convert('markdown', format, value);
-            let extension = '.txt';
-            for (const form of EXPORT_FORMATS) {
-                  if (form.id === format) {
-                        extension = form.ext;
+            try {
+                  const promise = convert('markdown', format, value);
+                  let extension = '.txt';
+                  for (const form of EXPORT_FORMATS) {
+                        if (form.id === format) {
+                              extension = form.ext;
+                        }
                   }
+                  const copy = file.export(extension);
+                  const res = await promise;
+                  copy.saveFileFromBlob(res);
+            } catch (e) {
+                  ErrorToast((e as Error).message)
+                  throw e
             }
-            const copy = file.export(extension);
-            const res = await promise;
-
-            if (res.stderr) {
-                  ErrorToast(res.stderr);
-                  return;
-            }
-            copy.save(res.stdout);
       }
       async function save(text: string) {
             try {

@@ -1,4 +1,4 @@
-import { readTextFile, writeTextFile } from "@tauri-apps/plugin-fs";
+import { readTextFile, writeFile, writeTextFile } from "@tauri-apps/plugin-fs";
 import * as dialog from "@tauri-apps/plugin-dialog";
 import { history } from "./history";
 
@@ -31,6 +31,10 @@ export class File {
       public async save(text: string = this.text) {
             this.text = text;
             await writeTextFile(this.path, this.text);
+      }
+      public async saveFileFromBlob(blob: Blob) {
+            const buff = await blob.arrayBuffer();
+            await writeFile(this.path, new Uint8Array(buff));
       }
 }
 

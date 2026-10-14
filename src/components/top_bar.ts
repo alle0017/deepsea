@@ -1,5 +1,7 @@
 import { Icons } from "./icons.js";
 import type { ExportMenu } from "./export_menu.js";
+import { Provider } from "../lib/provider.js";
+import { Router } from "../lib/router.js";
 
 type TopBarArgs = {
       save: () => void;
@@ -20,6 +22,7 @@ export function TopBar({ save, exportMenu }: TopBarArgs) {
                         icon: Icons.Export, // add this icon to icons.js
                         active: () => false,
                         onRun: () => exportMenu.toggle(),
-                  });
+                  })
+                  .addItem("home", { icon: Icons.Home, active: () => false, onRun: () => Provider.of(Router).goto('/') });
       };
 }

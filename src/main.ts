@@ -32,6 +32,13 @@ export function App() {
                   background: #d08770 !important;
                   color: #2e3440 !important;
             }
+            .milkdown-code-block {
+                  height: 350px;
+                  overflow-y: scroll;
+            }     
+            .milkdown-code-block-placeholder {
+                  height: 350px;
+            }
       `)
       mermaid.initialize({
             startOnLoad: true,

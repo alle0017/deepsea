@@ -5,6 +5,15 @@ import { File } from "../services/file_system";
 import { convert } from "../services/pandoc";
 import { EXPORT_FORMATS } from "../components/export_menu";
 
+function leave(cleanup: () => void) {
+      Provider.of(Router).onLeave.consume(event => {
+            if (event.route == '/editor') {
+                  cleanup();
+                  return false;
+            }
+            return true;
+      })
+}
 export function EditorPage(file: File) {
       async function exportAs(format: string, value: string) {
             try {
@@ -17,7 +26,7 @@ export function EditorPage(file: File) {
                   }
                   const copy = file.export(extension);
                   const res = await promise;
-                  copy.saveFileFromBlob(res);
+                  copy.saveFileFromBlob(res).catch(ErrorToast);
             } catch (e) {
                   ErrorToast((e as Error).message)
                   throw e
@@ -30,14 +39,6 @@ export function EditorPage(file: File) {
                   ErrorToast('failed to save the file');
             }
       }
-      function leave(cleanup: () => void) {
-            Provider.of(Router).onLeave.consume(event => {
-                  if (event.route == '/editor') {
-                        cleanup();
-                        return false;
-                  }
-                  return true;
-            })
-      }
+      
       return Editor({ value: file.text, save, leave, exportAs })
 }

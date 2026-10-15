@@ -9,6 +9,10 @@ export interface EditorPlugin {
 
 export class EditorModule {
       private readonly crepe: Crepe;
+
+      public get editor() {
+            return this.crepe;
+      }
       constructor(private readonly plugins: EditorPlugin[], private readonly root: HTMLElement, defaultValue: string) {
             const config: CrepeConfig = {
                   root,

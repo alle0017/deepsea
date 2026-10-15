@@ -20,7 +20,7 @@ export class SearchPlugin implements EditorPlugin {
       onCreate(crepe: Crepe): void {
             const getView = () => crepe.editor.action((ctx) => ctx.get(editorViewCtx));
             this.bar = FindBar({ getView });
-            Provider.of(Shortcuts).registerCrossPlatform('f', () => this.bar?.open());
+            Provider.of(Shortcuts).registerCrossPlatform('f', () => this.bar?.isOpen() ? this.bar?.close(): this.bar?.open());
       }
       onDestroy(): void {
             Provider.of(Shortcuts).unregisterCrossPlatform('f');

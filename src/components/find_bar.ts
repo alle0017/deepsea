@@ -1,4 +1,4 @@
-import { Component } from "../lib/index.js";
+import { bind, Component, Provider, react, Reactive } from "../lib/index.js";
 import type { EditorView } from "prosemirror-view";
 import {
       SearchQuery,
@@ -8,15 +8,11 @@ import {
       replaceNext,
       replaceAll,
 } from "prosemirror-search";
+import { Theme } from "../theme.js";
 
 const { div, span, button, input } = Component;
 
 const MAX_COUNT = 1000;
-
-const inputStyle = `flex: 1; min-width: 0; padding: 6px 8px; color: #e5e7eb; background: #111418; border: 1px solid #343a46; border-radius: 6px; outline: none; font: inherit;`;
-const btnStyle = `padding: 4px 8px; color: #e5e7eb; background: #1f242d; border: 1px solid #343a46; border-radius: 6px; font: inherit; font-size: 13px; cursor: pointer;`;
-const toggleOff = `${btnStyle} min-width: 30px; font-family: ui-monospace, monospace;`;
-const toggleOn = `${toggleOff} background: #2f4a7a; border-color: #5b8def;`;
 
 export interface FindBarOptions {
       getView: () => EditorView;
@@ -30,23 +26,32 @@ export interface FindBarElement {
     isOpen: () => boolean;
 }
 
+const NO_MATCH = 'No results';
+const ofNMatches = (n: number, current: number) => `${current || "-"} of ${n}${n >= MAX_COUNT ? "+" : ""}`;
+
 export function FindBar({ getView }: FindBarOptions): FindBarElement {
       const opts = { caseSensitive: false, wholeWord: false, regexp: false };
+      const matches = new Reactive('No results');
+      const replace = bind();
+      const inputStyle = `flex: 1; min-width: 0; padding: 6px 8px; color: #e5e7eb; background: ${Provider.of(Theme).background}; border: none; border-radius: 6px; outline: none; font: inherit;`;
+      const btnStyle = `padding: 4px 8px; color: #e5e7eb; background: ${Provider.of(Theme).surface}; border: none; border-radius: 6px; font: inherit; font-size: 13px; cursor: pointer;`;
+      const toggleOff = `${btnStyle} min-width: 30px; font-family: ui-monospace, monospace;`;
+      const toggleOn = `${toggleOff} background: #2f4a7a; border-color: #5b8def;`;
 
       const buildQuery = () =>
             new SearchQuery({
                   search: findInput.value,
-                  replace: replaceInput.value,
+                  replace: replace.value,
                   ...opts,
             });
 
       const updateCount = (query: SearchQuery) => {
             if (!findInput.value) {
-                  count.textContent = "";
+                  matches.value = NO_MATCH;
                   return;
             }
             if (!query.valid) {
-                  count.textContent = "Invalid";
+                  matches.value = NO_MATCH;
                   return;
             }
             const view = getView();
@@ -57,8 +62,7 @@ export function FindBar({ getView }: FindBarOptions): FindBarElement {
                   if (m.from === view.state.selection.from) current = n;
                   pos = m.to > m.from ? m.to : m.to + 1;
             }
-            count.textContent =
-                  n === 0 ? "No results" : `${current || "-"} of ${n}${n >= MAX_COUNT ? "+" : ""}`;
+            matches.value = n === 0 ? NO_MATCH: ofNMatches(n, current);
       };
 
       const updateQuery = () => {
@@ -108,41 +112,37 @@ export function FindBar({ getView }: FindBarOptions): FindBarElement {
                         e.preventDefault();
                         run(e.shiftKey ? findPrev : findNext);
                   }
-            },
+            }
       }) as HTMLInputElement;
 
-      const replaceInput = input({
-            type: "text",
-            placeholder: "Replace",
-            style: inputStyle,
-            input: updateQuery,
-            keydown: (event: Event) => {
-                  const e = event as KeyboardEvent;
-                  if (e.key === "Enter") {
-                        e.preventDefault();
-                        run(replaceNext);
-                  }
-            },
-      }) as HTMLInputElement;
 
-      const count = span({
-            style: `min-width: 64px; color: #9ca3af; font-size: 12px; text-align: right; white-space: nowrap;`,
-      }, "");
-
-      const el = div(
-            {
-                  role: "search",
-                  style: `position: fixed; top: 24px; right: 24px; z-index: 9000; display: none; flex-direction: column; gap: 8px; width: 380px; max-width: calc(100vw - 48px); padding: 12px; box-sizing: border-box; color: #e5e7eb; background: #1a1e25; border: 1px solid #343a46; border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,.35); font-family: system-ui, sans-serif; font-size: 14px;`,
-            },
+      const el = div({ role: "search", style: `position: fixed; top: 51px; right: 24px; z-index: 9000; display: none; flex-direction: column; gap: 8px; width: 380px; max-width: calc(100vw - 48px); padding: 12px; box-sizing: border-box; color: ${Provider.of(Theme).text}; background: ${Provider.of(Theme).surface}; border: 2px solid ${Provider.of(Theme).background}; border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,.35); font-family: system-ui, sans-serif; font-size: 14px;`, },
             div({ style: `display: flex; align-items: center; gap: 6px;` },
                   findInput,
-                  count,
-                  button({ type: "button", title: "Previous (Shift+Enter)", style: btnStyle, click: () => run(findPrev) }, "↑"),
-                  button({ type: "button", title: "Next (Enter)", style: btnStyle, click: () => run(findNext) }, "↓"),
-                  button({ type: "button", title: "Close (Esc)", "aria-label": "Close find bar", style: btnStyle, click: () => api.close() }, "✕")
+                  react([matches], () => 
+                        span({ style: `min-width: 64px; color: ${Provider.of(Theme).text}; font-size: 12px; text-align: right; white-space: nowrap;`}, 
+                              `${matches.value}`
+                        )
+                  ),
+                  button({ type: "button", title: "Previous", style: btnStyle, click: () => run(findPrev) }, "↑"),
+                  button({ type: "button", title: "Next", style: btnStyle, click: () => run(findNext) }, "↓"),
+                  button({ type: "button", title: "Close", "aria-label": "Close find bar", style: btnStyle, click: () => api.close() }, "✕")
             ),
             div({ style: `display: flex; align-items: center; gap: 6px;` },
-                  replaceInput,
+                  input({
+                        type: "text",
+                        placeholder: "Replace",
+                        style: inputStyle,
+                        input: updateQuery,
+                        keydown: (event: Event) => {
+                              const e = event as KeyboardEvent;
+                              if (e.key === "Enter") {
+                                    e.preventDefault();
+                                    run(replaceNext);
+                              }
+                        },
+                        ...replace.binding
+                  }),
                   button({ type: "button", style: btnStyle, click: () => run(replaceNext) }, "Replace"),
                   button({ type: "button", style: btnStyle, click: () => run(replaceAll) }, "All")
             ),

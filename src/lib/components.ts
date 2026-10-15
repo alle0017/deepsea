@@ -38,6 +38,8 @@ export const element = (() => {
       };
 })();
 
+export const text = (v: string) => document.createTextNode(v) as Node as HTMLElement
+
 //@ts-ignore
 export const Component: Record<keyof HTMLElementTagNameMap, <T extends {}>(prop: HTMLProp<T>, ...children: (HTMLElement | string)[]) => HTMLElement> = new Proxy(new Map(), {
       get(target, key) {

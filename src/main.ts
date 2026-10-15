@@ -20,7 +20,7 @@ export function App() {
                   font-family: system-ui;
             }
             body {
-                  background-color: ${Provider.of(Theme).background};
+                  background-color: ${Provider.of(Theme).surface};
                   overflow: hidden;
             }
             .milkdown .ProseMirror .ProseMirror-search-match {

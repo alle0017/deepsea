@@ -21,6 +21,7 @@ export function App() {
             }
             body {
                   background-color: ${Provider.of(Theme).background};
+                  overflow: hidden;
             }
             .milkdown .ProseMirror .ProseMirror-search-match {
                   background: #ebcb8b !important;

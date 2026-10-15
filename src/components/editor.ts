@@ -4,7 +4,7 @@ import "@milkdown/crepe/theme/common/style.css";
 import "@milkdown/crepe/theme/nord-dark.css";
 import { Component, hook, } from "../lib/index.js"
 import { EditorModule } from "./editor/editor_plugin.js";
-import { MermaidPlugin } from "./editor/mermaid_plugin.js";
+import { PreviewPlugin } from "./editor/preview_plugin.js";
 import { SearchPlugin } from "./editor/search_plugin.js";
 import { TopBarPlugin } from "./editor/top_bar_plugin.js";
 
@@ -21,9 +21,9 @@ export function Editor({ value, leave, exportAs, save }: Args) {
       value ??= '';
       async function create(el: HTMLElement) {
             const editor = new EditorModule([
-                  new MermaidPlugin(),
+                  new PreviewPlugin(),
                   new SearchPlugin(),
-                  new TopBarPlugin(exportAs, save)
+                  new TopBarPlugin(exportAs, save),
             ], el, value as string);
 
             await editor.create();
@@ -34,6 +34,6 @@ export function Editor({ value, leave, exportAs, save }: Args) {
       }
 
       return hook({ mount: create },
-            div({})
+            div({ style: 'height: 80vh; min-height: 0; overflow-y: auto; overflow-x: hidden; overflow-anchor: none; padding-bottom: 60vh;' })
       )
 }

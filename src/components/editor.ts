@@ -10,6 +10,7 @@ import { TopBarPlugin } from "./editor/top_bar_plugin.js";
 import { column, row, Theme } from "../theme.js";
 import { icon, Icons } from "./icons.js";
 import { text } from '../lib/components';
+import { ImagePlugin } from "./editor/image_plugin.js";
 
 const { div, span } = Component;
 
@@ -27,6 +28,7 @@ export function Editor({ value, leave, exportAs, save }: Args) {
             const editor = new EditorModule([
                   new PreviewPlugin(),
                   new SearchPlugin(),
+                  new ImagePlugin(),
                   new TopBarPlugin(exportAs, text => {
                         save?.(text);
                         saved.value = true;

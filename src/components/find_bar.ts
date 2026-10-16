@@ -36,7 +36,7 @@ export function FindBar({ getView }: FindBarOptions): FindBarElement {
       const inputStyle = `flex: 1; min-width: 0; padding: 6px 8px; color: #e5e7eb; background: ${Provider.of(Theme).background}; border: none; border-radius: 6px; outline: none; font: inherit;`;
       const btnStyle = `padding: 4px 8px; color: #e5e7eb; background: ${Provider.of(Theme).surface}; border: none; border-radius: 6px; font: inherit; font-size: 13px; cursor: pointer;`;
       const toggleOff = `${btnStyle} min-width: 30px; font-family: ui-monospace, monospace;`;
-      const toggleOn = `${toggleOff} background: #2f4a7a; border-color: #5b8def;`;
+      const toggleOn = `${toggleOff} background: ${Provider.of(Theme).orange}; border-color: ${Provider.of(Theme).orange};`;
 
       const buildQuery = () =>
             new SearchQuery({

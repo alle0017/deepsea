@@ -6,7 +6,6 @@ import { ExportMenu, ExportMenuElement } from "../export_menu";
 import { TopBar } from "../top_bar";
 
 
-
 export class TopBarPlugin implements EditorPlugin {
 
       private exportMenu: ExportMenuElement | undefined;

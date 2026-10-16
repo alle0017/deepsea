@@ -24,12 +24,12 @@ export function App() {
                   overflow: hidden;
             }
             .milkdown .ProseMirror .ProseMirror-search-match {
-                  background: #ebcb8b !important;
+                  background: ${Provider.of(Theme).yellow} !important;
                   color: #2e3440 !important;
                   border-radius: 2px;
             }
             .milkdown .ProseMirror .ProseMirror-active-search-match {
-                  background: #d08770 !important;
+                  background: ${Provider.of(Theme).orange} !important;
                   color: #2e3440 !important;
             }
             .milkdown-code-block {

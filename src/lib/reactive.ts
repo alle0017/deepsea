@@ -15,8 +15,10 @@ export class Reactive<T> {
             return this._value;
       }
       public set value(v: T) {
-            this._value = v;
-            this.dispatch();
+            if (this._value != v) {
+                  this._value = v;
+                  this.dispatch();
+            }
       }
 
       public dispatch() {

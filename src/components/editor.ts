@@ -11,7 +11,7 @@ import { column, row, Theme } from "../theme.js";
 import { icon, Icons } from "./icons.js";
 import { text } from '../lib/components';
 
-const { div } = Component;
+const { div, span } = Component;
 
 type Args = {
       save?: (value: string) => void
@@ -22,21 +22,31 @@ type Args = {
 
 export function Editor({ value, leave, exportAs, save }: Args) {
       value ??= '';
+
       async function create(el: HTMLElement) {
             const editor = new EditorModule([
                   new PreviewPlugin(),
                   new SearchPlugin(),
-                  new TopBarPlugin(exportAs, save),
+                  new TopBarPlugin(exportAs, text => {
+                        save?.(text);
+                        saved.value = true;
+                        value = text;
+                  }),
             ], el, value as string);
 
             await editor.create();
             editor.editor.on(api => {
-                  api.markdownUpdated((_, str: string) => letters.value = str.length);
+                  api.markdownUpdated((_, str: string) => {
+                        letters.value = str.length;
+                        saved.value = str == value;
+
+                  });
             })
             leave?.(async () => {
                   await editor.destroy()
             })
       }
+      const saved = new Reactive(true);
       const letters = new Reactive(value.length);
       const style = `
             background-color: ${Provider.of(Theme).background}; 
@@ -54,12 +64,23 @@ export function Editor({ value, leave, exportAs, save }: Args) {
             hook({ mount: create },
                   div({ style })
             ),
-            div({ style: `width: 100%; height: 32px; ${row()}` },
+            div({ style: `width: 100%; height: 32px; ${row('50px')}` },
                   div({ style: `align-items: center; ${row('2px')}` },
                         icon({}, Icons.WordCount),
                         ':',
                         react([letters], () => text(`${letters.value}`))
-                  )
+                  ),
+                  react([saved], () => 
+                        div({ style: ` align-items: center; ${row('2px')}` },
+                              icon({ width: 16, height: 16, color: saved.value ? Provider.of(Theme).green: Provider.of(Theme).red }, 
+                                    Icons.Dot
+                              ),
+                              span({ style: 'font-size: 11px;'}, 
+                                    saved.value ? 'Saved': 'Not saved'
+                              )
+                        )
+                  ),
+                  
             )
       )
 }

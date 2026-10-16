@@ -9,6 +9,7 @@
     "core:default",
     "opener:default",
     "fs:allow-read-file",
+    "clipboard-manager:allow-read-image",
     {
       "identifier": "fs:allow-read-text-file",
       "allow": [{ "path": "**" }]
